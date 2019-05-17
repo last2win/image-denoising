@@ -1,15 +1,7 @@
 # -*- coding:utf-8 -*-
 import numpy as np
-from scipy.misc import imread, imsave
-import scipy.stats as stats
 import imageio
 from sklearn.linear_model import LinearRegression
-
-
-
-
-
-
 
 
 def im2double(im):
@@ -17,14 +9,14 @@ def im2double(im):
     return im.astype(np.double) / info.max
 
 
-def imwrite(im, filename):
+def write(im, filename):
     img = np.copy(im)
     img = img.squeeze()
     if img.dtype == np.double:
         #img = np.array(img*255, dtype=np.uint8)
         img = img * np.iinfo(np.uint8).max
         img = img.astype(np.uint8)
-    imsave(filename, img)
+    imageio.imwrite(filename, img)
 
 # get the noise mask of corrImg
 
@@ -38,8 +30,7 @@ def restore(img, filename):
     resImg = np.copy(img)
     noiseMask = getNoiseMask(img)
     rows, cols, channel = img.shape
-    completedNum = 0
-    oldRate = 0
+    count = 0
     for row in range(rows):
         for col in range(cols):
 
@@ -81,11 +72,11 @@ def restore(img, filename):
                 Regression = LinearRegression()
                 Regression.fit(x_train, y_train)
                 resImg[row, col, chan] = Regression.predict([[row, col]])
-            completedNum += 1
-            if completedNum % 1000 == 0:
+            count += 1
+            if count % 50000 == 0:
                 print(filename+".png restored:" +
-                      str(float(completedNum)/rows/cols))
-
+                      str(float(count)/rows/cols))
+    print(filename+".png restore finish!")
     return resImg
 
 
@@ -96,4 +87,4 @@ if __name__ == '__main__':
         if len(img.shape) == 2:
             img = img[:, :, np.newaxis]
         resImg = restore(img, img_name)
-        imwrite(resImg, img_name+'_recover.png')
+        write(resImg, img_name+'_recover.png')

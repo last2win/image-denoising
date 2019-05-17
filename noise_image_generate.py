@@ -1,13 +1,13 @@
 import numpy as np
-from scipy.misc import imsave
 import imageio
+
 
 def im2double(im):
     info = np.iinfo(im.dtype)
     return im.astype(np.double) / info.max
 
 
-def imwrite(im, filename):
+def write(im, filename):
     img = np.copy(im)
     img = img.squeeze()
     if img.dtype == np.double:
@@ -30,4 +30,4 @@ for imgName, noiseRatio in samples.items():
             noiseIdx = np.array(tmp[:subNoiseNum])
             noiseMask[i, noiseIdx, k] = 0
     noiseImg = Img * noiseMask
-    imageio.imwrite(uri= '{}_noise.png'.format(imgName),im=noiseImg)
+    write(im=noiseImg, filename='{}_noise.png'.format(imgName))
