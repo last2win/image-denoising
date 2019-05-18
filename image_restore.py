@@ -33,34 +33,20 @@ def restore(img, filename):
     count = 0
     for row in range(rows):
         for col in range(cols):
-
-            if row-radius < 0:
-                rowl = 0
-                rowr = rowl+2*radius
-            elif row+radius >= rows:
-                rowr = rows-1
-                rowl = rowr-2*radius
-            else:
-                rowl = row-radius
-                rowr = row+radius
-
-            if col-radius < 0:
-                coll = 0
-                colr = coll+2*radius
-            elif col+radius >= cols:
-                colr = cols-1
-                coll = colr-2*radius
-            else:
-                coll = col-radius
-                colr = col+radius
+            rowl = row-radius
+            coll = col-radius
 
             for chan in range(channel):
                 if noiseMask[row, col, chan] != 0.:
                     continue
                 x_train = []
                 y_train = []
-                for i in range(rowl, rowr):
-                    for j in range(coll, colr):
+                for i in range(rowl, rowl+radius*2):
+                    if i < 0 or i >= row:
+                        continue
+                    for j in range(coll, coll+radius*2):
+                        if j < 0 or j >= col:
+                            continue
                         if noiseMask[i, j, chan] == 0.:
                             continue
                         if i == row and j == col:
