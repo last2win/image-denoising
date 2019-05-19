@@ -44,9 +44,9 @@ def restore(img, filename):
                     for j in range(col-radius, col+radius):
                         if j < 0 or j >= col:
                             continue
-                        if noiseMask[i, j, chan] == 0.:
+                        elif noiseMask[i, j, chan] == 0.:
                             continue
-                        if i == row and j == col:
+                        elif i == row and j == col:
                             continue
                         x_train.append([i, j])
                         y_train.append([img[i, j, chan]])
