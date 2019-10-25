@@ -66,7 +66,7 @@ def restore(img, filename):
 if __name__ == '__main__':
     queue = ['A']
     for img_name in queue:
-        img = im2double(imageio.imread(img_name+'.png'))
+        img = im2double(imageio.imread(img_name+'_noise.png'))
         if len(img.shape) == 2:
             img = img[:, :, np.newaxis]
         resImg = restore(img, img_name)
